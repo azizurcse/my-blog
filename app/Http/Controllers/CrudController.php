@@ -59,7 +59,8 @@ class CrudController extends Controller
      */
     public function show($id)
     {
-        //
+        $item=Crud::find($id);
+        return view('layout.show',compact('item'));
     }
 
     /**
@@ -70,7 +71,8 @@ class CrudController extends Controller
      */
     public function edit($id)
     {
-        //
+        $item=Crud::find($id);
+        return view('layout.edit',compact('item'));
     }
 
     /**
@@ -82,7 +84,20 @@ class CrudController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $insert=Crud::find($id);
+        $this->validate($request,[
+            'title'=>'required',
+            'post'=>'required',
+            'image'=>'required|image',
+        ]);
+
+        $insert->title=$request->title;
+        $insert->post=$request->post;
+        $insert->image=asset('storage').'/'.$request->image->store('images');
+
+        $insert->save();
+        session()->flash('message','Updated Successfully');
+        return redirect('/blog');
     }
 
     /**
@@ -93,6 +108,9 @@ class CrudController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $item=Crud::find($id);
+        $item->delete();
+        session()->flash('message','Deleted Successfully');
+        return redirect('/blog');
     }
 }

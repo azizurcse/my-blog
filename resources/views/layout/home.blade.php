@@ -2,43 +2,37 @@
 
 @section('body')
 
+    @include('layout.nav')
+    @if(session()->has('message'))
+        <h1 class="alert alert-success">{{session()->get('message')}}</h1>
+    @endif
     <div class="row">
-        <div class="col-md-12">
-            <nav class="navbar navbar-default">
-                <div class="container-fluid">
-                    <!-- Brand and toggle get grouped for better mobile display -->
-                    <div class="navbar-header">
+        <div class="col-lg-6 col-lg-offset-3">
+            <br><br>
 
-                        <a class="navbar-brand" href="#">Blog</a>
-                    </div>
+            <h1>Insert Your Post</h1>
+            <ul class="list-group col-lg-9">
+                @foreach($datas as $data)
+                    <li class="list-group-item">
+                        <a href="{{'/blog/'.$data->id}}"> {{$data->title}}</a>
+                        <span class="pull-right">{{$data->created_at->diffForHumans()}}</span>
+                    </li>
+                @endforeach
+            </ul>
 
-                    <!-- Collect the nav links, forms, and other content for toggling -->
-                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                        <ul class="nav navbar-nav">
-                            <li><a href="blog/create">Add Post</a></li>
-                            <li><a href="/blog">View Post</a></li>
-
-                        </ul>
-
-                        <ul class="nav navbar-nav navbar-right">
-
-                        </ul>
-                    </div><!-- /.navbar-collapse -->
-                </div><!-- /.container-fluid -->
-            </nav>
+            <ul class="list-group col-lg-3">
+                @foreach($datas as $data)
+                    <li class="list-group-item">
+                        <a href="{{'/blog/'.$data->id.'/edit'}}">Edit</a>
+                        <form class="form-group pull-right" action="{{'/blog/'.$data->id}}" method="post">
+                            {{csrf_field()}}
+                            {{method_field('DELETE')}}
+                            <button type="submit" style="border: none;">delete</button>
+                        </form>
+                    </li>
+                @endforeach
+            </ul>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-md-4"></div>
-        <div class="col-md-4">
-            @foreach($datas as $data)
-                <li class="list-group-item">
-                    <a href="{{'/insertview/'.$data->id}}"> {{$data->title}}</a>
-                    <span class="pull-right">{{$data->created_at->diffForHumans()}}</span>
-                </li>
-            @endforeach
-        </div>
-        <div class="col-md-4"></div>
     </div>
 
 @endsection
